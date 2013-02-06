@@ -52,7 +52,8 @@ bool AppDelegate::applicationDidFinishLaunching()
 //    sampleManager->deleteTable();
 //    sampleManager->createTable();
     
-    sample = (Sample *)sampleManager->save(sample);
+    sample = (Sample *)sampleManager->save(sample); // insert した結果が返ってくる
+    
     CCArray* resultArray =  sampleManager->select(sample);
     CCObject *object = NULL;
     Sample *lastsample = NULL;
@@ -68,6 +69,7 @@ bool AppDelegate::applicationDidFinishLaunching()
         CCLog("%d,%s",sample->getId(),((CCString *)sample->getName())->getCString());
     }
     
+    // insertした結果を書き換える
     sample->setName(CCString::createWithFormat("test5"));
     sampleManager->save(sample);
     
