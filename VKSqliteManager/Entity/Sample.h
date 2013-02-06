@@ -9,22 +9,18 @@
 #ifndef SqliteSample_Sample_
 #define SqliteSample_Sample_
 
-#include "cocos2d.h"
+#include "VKBaseEntity.h"
 
-static const char *idKey = "id";
 static const char *nameKey = "name";
-class Sample : public cocos2d::CCDictionary
+class Sample : public  VKBaseEntity
 {
 
 public:
-    virtual bool init();
     virtual ~Sample();
     Sample();
     CREATE_FUNC(Sample);
     
 public:
-    void setId(int idNum);
-    int getId();
     void setName(cocos2d::CCString *name);
     cocos2d::CCString* getName();
 };

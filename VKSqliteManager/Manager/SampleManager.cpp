@@ -30,8 +30,8 @@ SampleManager::~SampleManager()
 }
 
 bool SampleManager::createTable(){
-    CCString *sqlString = CCString::createWithFormat("create table %s ( %s integer primary key autoincrement, %s nvarchar(32) ) ", tableName, idKey, nameKey);
-    return sqlExec(sqlString -> getCString());
+    CCString *sqlString = CCString::createWithFormat("%s nvarchar(32)", nameKey);
+    return createTableWithTableSetting(sqlString -> getCString());
 }
 
 

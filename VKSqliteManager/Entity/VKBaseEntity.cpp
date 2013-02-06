@@ -10,10 +10,28 @@
 
 using namespace cocos2d;
 
+bool VKBaseEntity::init(){
+    return true;
+}
+
 VKBaseEntity::VKBaseEntity()
 {
 }
 
 VKBaseEntity::~VKBaseEntity()
 {
+}
+
+
+
+
+
+void VKBaseEntity::setId(int idNum){
+    CCString *string = CCString::createWithFormat("%d",idNum);
+    this -> setObject(string, idKey);
+}
+
+int VKBaseEntity::getId(){
+    CCString *string = (CCString *)this -> objectForKey(idKey);
+    return string -> intValue();
 }

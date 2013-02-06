@@ -46,14 +46,16 @@ bool AppDelegate::applicationDidFinishLaunching()
     
     // サンプル
     Sample *sample = Sample::create();
-    sample->setName(CCString::create("test"));
+    sample->setName(CCString::create("test2"));
  
     SampleManager *sampleManager = SampleManager::create();
-
-    sampleManager->save(sample);
+//    sampleManager->deleteTable();
+//    sampleManager->createTable();
+    
+    sample = (Sample *)sampleManager->save(sample);
     CCArray* resultArray =  sampleManager->select(sample);
     CCObject *object = NULL;
-    Sample *lastsample;
+    Sample *lastsample = NULL;
     CCARRAY_FOREACH(resultArray, object){
         Sample *sample = (Sample *)object;
         CCLog("%d,%s",sample->getId(),((CCString *)sample->getName())->getCString());
@@ -65,6 +67,9 @@ bool AppDelegate::applicationDidFinishLaunching()
         Sample *sample = (Sample *)object;
         CCLog("%d,%s",sample->getId(),((CCString *)sample->getName())->getCString());
     }
+    
+    sample->setName(CCString::createWithFormat("test5"));
+    sampleManager->save(sample);
     
     CCArray* resultArray3 =  sampleManager->getSampleGreaterThanId(1);
     CCARRAY_FOREACH(resultArray3, object){

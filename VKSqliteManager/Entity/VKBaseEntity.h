@@ -11,12 +11,19 @@
 
 #include "cocos2d.h"
 
+static const char *idKey = "id";
 class VKBaseEntity : public cocos2d::CCDictionary
 {
 
 public:
+    virtual bool init();
 	VKBaseEntity();
 	virtual ~VKBaseEntity();
+     CREATE_FUNC(VKBaseEntity);
+    
+public:
+    void setId(int idNum);
+    int getId();
 };
 
 #endif

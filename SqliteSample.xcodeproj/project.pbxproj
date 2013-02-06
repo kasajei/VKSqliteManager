@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		93B3696716C1D6FA00A097A9 /* VKBaseEntity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B3696416C1D6AD00A097A9 /* VKBaseEntity.cpp */; };
 		93EF063616B3A2CA00DEE521 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93EF063516B3A2CA00DEE521 /* QuartzCore.framework */; };
 		93EF063816B3A2CA00DEE521 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93EF063716B3A2CA00DEE521 /* OpenGLES.framework */; };
 		93EF063A16B3A2CA00DEE521 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93EF063916B3A2CA00DEE521 /* OpenAL.framework */; };
@@ -209,6 +210,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		93B3696416C1D6AD00A097A9 /* VKBaseEntity.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = VKBaseEntity.cpp; sourceTree = "<group>"; };
+		93B3696516C1D6AD00A097A9 /* VKBaseEntity.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VKBaseEntity.h; sourceTree = "<group>"; };
 		93EF063116B3A2CA00DEE521 /* SqliteSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SqliteSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		93EF063516B3A2CA00DEE521 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		93EF063716B3A2CA00DEE521 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -1551,6 +1554,8 @@
 			children = (
 				93EF08FE16B3D73000DEE521 /* Sample.cpp */,
 				93EF08FF16B3D73000DEE521 /* Sample.h */,
+				93B3696416C1D6AD00A097A9 /* VKBaseEntity.cpp */,
+				93B3696516C1D6AD00A097A9 /* VKBaseEntity.h */,
 			);
 			path = Entity;
 			sourceTree = "<group>";
@@ -1815,6 +1820,7 @@
 				93EF090016B3D73000DEE521 /* Sample.cpp in Sources */,
 				93EF090616B3F88800DEE521 /* VKBaseManager.cpp in Sources */,
 				93EF090916B409FF00DEE521 /* SampleManager.cpp in Sources */,
+				93B3696716C1D6FA00A097A9 /* VKBaseEntity.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -121,6 +121,10 @@ bool VKBaseManager::createTable(){
     return true;
 }
 
+bool VKBaseManager::createTableWithTableSetting(const char *tableSetting){
+    CCString *sqlString = CCString::createWithFormat("create table %s ( %s integer primary key autoincrement, %s )", tableName,idKey, tableSetting);
+    return sqlExec(sqlString -> getCString());
+}
 
 bool VKBaseManager::deleteTable(){
     CCString *string = CCString::createWithFormat("DROP TABLE '%s'",tableName);
@@ -129,12 +133,18 @@ bool VKBaseManager::deleteTable(){
 }
 
 
-bool VKBaseManager::save(CCDictionary *entity)
+VKBaseEntity* VKBaseManager::save(VKBaseEntity *entity)
 {
+    if (entity == NULL) {
+        return NULL;
+    }
+    // まずはinsertしてみる
+    
     // keyに設定されているものをすべて
     CCDictElement *element = NULL;
     CCString *keys = CCString::create("");
     CCString *values = CCString::create("");
+    CCString *updates = CCString::create("");
     CCDICT_FOREACH(entity, element){
         if (keys -> isEqual(CCString::create(""))) {
             keys = CCString::createWithFormat("%s",element->getStrKey());
@@ -149,18 +159,35 @@ bool VKBaseManager::save(CCDictionary *entity)
             values = CCString::createWithFormat("%s, '%s'", values->getCString(), value->getCString());
         }
         
+        if (updates -> isEqual(CCString::create(""))) {
+            updates = CCString::createWithFormat(" %s = '%s' ", element->getStrKey(), value->getCString());
+        }else{
+            updates = CCString::createWithFormat("%s, %s = '%s' ", updates->getCString(), element->getStrKey(), value->getCString());
+        }
     }
-    CCString *sqlString = CCString::createWithFormat("insert into %s ( %s ) values ( %s ) ", tableName, keys->getCString(), values->getCString());
+    CCString *insertString = CCString::createWithFormat("insert into %s ( %s ) values ( %s ) ", tableName, keys->getCString(), values->getCString());
     
-    
-    return sqlPrepare(sqlString->getCString());
+    bool result  = sqlExec(insertString->getCString());
+
+    // insertできなかったら、保存
+    if (!result) {
+        CCString *updateString = CCString::createWithFormat("update %s set %s where id = %d",tableName, updates->getCString(), entity->getId());
+        result = sqlExec(updateString->getCString());
+    }else{
+        CCArray *array = select(entity);
+        entity = (VKBaseEntity *)array->lastObject();
+    }
+    return entity;
     
 }
 
 
 
-CCArray* VKBaseManager::select(CCDictionary *entity)
+CCArray* VKBaseManager::select(VKBaseEntity *entity)
 {
+    if (entity == NULL) {
+        return NULL;
+    }
     // keyに設定されているものをすべて
     CCDictElement *element = NULL;
     CCString *where = CCString::create("");

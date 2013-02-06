@@ -11,6 +11,7 @@
 
 #include "cocos2d.h"
 #include "sqlite3.h"
+#include "VKBaseEntity.h"
 
 class VKBaseManager : public cocos2d::CCObject
 {
@@ -34,9 +35,12 @@ public:
     virtual bool checkTable();
     virtual bool createTable();
     virtual bool deleteTable();
-    virtual bool save(cocos2d::CCDictionary *entity);
-    virtual cocos2d::CCArray* select(cocos2d::CCDictionary *entity);
+    virtual VKBaseEntity* save(VKBaseEntity *entity);
+    virtual cocos2d::CCArray* select(VKBaseEntity *entity);
     virtual cocos2d::CCArray* selectWithWhere(const char *where);
+    
+protected:
+    virtual bool createTableWithTableSetting(const char *tableSetting);
 
 };
 
