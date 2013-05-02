@@ -85,7 +85,9 @@ CCArray* VKBaseManager::sqlPrepare(const char *sql){
             CCDictionary *dic = CCDictionary::create();
             int columnNum = sqlite3_column_count(stmt);
             for (int i = 0; i < columnNum; i++) {
-                CCString* string = CCString::create((const char*)sqlite3_column_text(stmt, i));
+                const char* text =  (const char*)sqlite3_column_text(stmt, i);
+                if (!text) text = ""; // if column is null , text set "".
+                CCString* string = CCString::create(text);
                 const char *key = sqlite3_column_name(stmt, i);
                 dic->setObject(string, key);
             }
@@ -124,11 +126,26 @@ bool VKBaseManager::createTableWithTableSetting(const char *tableSetting){
     return sqlExec(sqlString -> getCString());
 }
 
+bool VKBaseManager::addColumn(){
+    return true;
+}
+
+bool VKBaseManager::addColumnWithArray(CCArray *columnAry){
+    CCObject *string;
+    CCARRAY_FOREACH(columnAry, string){
+        CCString *sqlString = CCString::createWithFormat("alter table %s add column %s", tableName, ((CCString *)string)->getCString());
+        sqlExec(sqlString -> getCString());
+    }
+    return true;
+}
+
 bool VKBaseManager::deleteTable(){
     CCString *string = CCString::createWithFormat("DROP TABLE '%s'",tableName);
     CCLog("%s", string->getCString());
     return sqlExec(string->getCString());
 }
+
+
 
 
 VKBaseEntity* VKBaseManager::save(VKBaseEntity *entity)
@@ -173,6 +190,8 @@ VKBaseEntity* VKBaseManager::save(VKBaseEntity *entity)
         }else{
             // TODO : 
             // this failure maybe have more properties than old entity's definition, so alter table.
+            addColumn(); // change table
+            save(entity); // Re-save entity
         }
     }else{
         CCArray *array = select(entity);
@@ -207,7 +226,7 @@ CCArray* VKBaseManager::select(VKBaseEntity *entity)
 
 CCArray* VKBaseManager::selectWithWhere(const char *where)
 {
-    CCString *sqlString = CCString::createWithFormat("select * from %s where %s ", tableName,where);
+    CCString *sqlString = CCString::createWithFormat("select * from %s where %s ", tableName, where);
     return sqlPrepare(sqlString->getCString());
     
 }

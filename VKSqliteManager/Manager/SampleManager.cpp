@@ -30,8 +30,19 @@ SampleManager::~SampleManager()
 }
 
 bool SampleManager::createTable(){
-    CCString *sqlString = CCString::createWithFormat("%s nvarchar(32), %s nvarchar(32)", nameKey, addressKey);
+    CCString *sqlString = CCString::createWithFormat("%s nvarchar(32)", nameKey);
     return createTableWithTableSetting(sqlString -> getCString());
+}
+
+bool SampleManager::addColumn(){
+    CCArray *array = CCArray::create();
+    
+    CCString *column1 = CCString::createWithFormat("%s nvarchar(32)", addressKey);
+    array->addObject(column1);
+    CCString *column2 = CCString::createWithFormat("%s nvarchar(32)", phoneKey);
+    array->addObject(column2);
+
+    return addColumnWithArray(array);
 }
 
 

@@ -21,6 +21,7 @@ public:
 	SampleManager();
 	virtual ~SampleManager();
     virtual bool createTable();
+    virtual bool addColumn();
     CREATE_FUNC(SampleManager);
     
 public:

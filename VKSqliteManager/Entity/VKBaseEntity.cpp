@@ -33,5 +33,10 @@ void VKBaseEntity::setId(int idNum){
 
 int VKBaseEntity::getId(){
     CCString *string = (CCString *)this -> objectForKey(idKey);
-    return string -> intValue();
+    if (string) {
+        return string -> intValue();
+    }else{
+        return 0;
+    }
+    
 }

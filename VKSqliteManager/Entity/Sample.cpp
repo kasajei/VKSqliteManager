@@ -37,3 +37,11 @@ void Sample::setAddress(CCString *address){
 CCString* Sample::getAddress(){
     return (CCString *)this -> objectForKey(addressKey);
 }
+
+void Sample::setPhone(CCString *phone){
+    this -> setObject(phone, phoneKey);
+}
+
+CCString* Sample::getPhone(){
+    return (CCString *)this -> objectForKey(phoneKey);
+}

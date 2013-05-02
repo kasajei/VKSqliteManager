@@ -34,6 +34,7 @@ protected:
 public:
     virtual bool checkTable();
     virtual bool createTable();
+    virtual bool addColumn();
     virtual bool deleteTable();
     virtual VKBaseEntity* save(VKBaseEntity *entity);
     virtual cocos2d::CCArray* select(VKBaseEntity *entity);
@@ -41,6 +42,7 @@ public:
     
 protected:
     virtual bool createTableWithTableSetting(const char *tableSetting);
+    virtual bool addColumnWithArray(cocos2d::CCArray *columnAry);
 
 };
 

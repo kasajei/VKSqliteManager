@@ -48,6 +48,7 @@ bool AppDelegate::applicationDidFinishLaunching()
     Sample *sample = Sample::create();
     sample->setName(CCString::create("test2"));
     sample-> setAddress(CCString::create("testAddress"));
+    sample->setPhone(CCString::create("08011212312"));
  
     SampleManager *sampleManager = SampleManager::create();
 //    sampleManager->deleteTable();
