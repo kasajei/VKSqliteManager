@@ -44,15 +44,17 @@ bool AppDelegate::applicationDidFinishLaunching()
     
     
     
-    // サンプル
+    // Sample
     Sample *sample = Sample::create();
     sample->setName(CCString::create("test2"));
+    sample-> setAddress(CCString::create("testAddress"));
  
     SampleManager *sampleManager = SampleManager::create();
 //    sampleManager->deleteTable();
 //    sampleManager->createTable();
     
-    sample = (Sample *)sampleManager->save(sample); // insert した結果が返ってくる
+    // insert entity
+    sample = (Sample *)sampleManager->save(sample); 
     
     CCArray* resultArray =  sampleManager->select(sample);
     CCObject *object = NULL;
@@ -63,13 +65,14 @@ bool AppDelegate::applicationDidFinishLaunching()
         lastsample = (Sample *)object;
     }
     
+    // search entity
     CCArray* resultArray2 =  sampleManager->select(lastsample);
     CCARRAY_FOREACH(resultArray2, object){
         Sample *sample = (Sample *)object;
         CCLog("%d,%s",sample->getId(),((CCString *)sample->getName())->getCString());
     }
     
-    // insertした結果を書き換える
+    // change entity
     sample->setName(CCString::createWithFormat("test5"));
     sampleManager->save(sample);
     

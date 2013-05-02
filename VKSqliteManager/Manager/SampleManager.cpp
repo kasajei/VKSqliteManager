@@ -30,12 +30,11 @@ SampleManager::~SampleManager()
 }
 
 bool SampleManager::createTable(){
-    CCString *sqlString = CCString::createWithFormat("%s nvarchar(32)", nameKey);
+    CCString *sqlString = CCString::createWithFormat("%s nvarchar(32), %s nvarchar(32)", nameKey, addressKey);
     return createTableWithTableSetting(sqlString -> getCString());
 }
 
 
-#pragma mark オリジナル
 CCArray* SampleManager::getSampleGreaterThanId(int idNum){
     CCString *where = CCString::createWithFormat("%s > %d", idKey, idNum);
     return selectWithWhere(where -> getCString());

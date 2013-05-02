@@ -29,3 +29,11 @@ void Sample::setName(CCString *name){
 CCString* Sample::getName(){
     return (CCString *)this -> objectForKey(nameKey);
 }
+
+void Sample::setAddress(CCString *address){
+    this -> setObject(address, addressKey);
+}
+
+CCString* Sample::getAddress(){
+    return (CCString *)this -> objectForKey(addressKey);
+}

@@ -12,6 +12,7 @@
 #include "VKBaseEntity.h"
 
 static const char *nameKey = "name";
+static const char *addressKey = "address";
 class Sample : public  VKBaseEntity
 {
 
@@ -23,6 +24,8 @@ public:
 public:
     void setName(cocos2d::CCString *name);
     cocos2d::CCString* getName();
+    void setAddress(cocos2d::CCString *address);
+    cocos2d::CCString* getAddress();
 };
 
 #endif

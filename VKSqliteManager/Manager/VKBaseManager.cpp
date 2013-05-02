@@ -31,18 +31,16 @@ VKBaseManager::~VKBaseManager()
 }
 
 bool VKBaseManager::connectDB(){
-    // DBのパスを指定
+    // setting to database's path
     std::string dbPath = CCFileUtils::sharedFileUtils()->getWriteablePath();
     dbPath.append(dbFileName);
-//    CCLOG("sqlConect Path %s",dbPath.c_str());
     
-    // DBを取得
+    //  get database's connection
     int result = sqlite3_open(dbPath.c_str(),&pDB);
     if (result != SQLITE_OK){
         CCLOG("OPENING WRONG, %d, MSG:%s",result);
         return false;
     }else{
-//        CCLOG("sqlConnect OK! %d, %s",result);
         return true;
     }
 }
@@ -52,8 +50,8 @@ void VKBaseManager::closeDB(){
 }
 
 bool VKBaseManager::sqlExec(const char *sql, int (*callback)(void *, int, char **, char**)){
-    if (!connectDB()) { // DBへの接続
-        return false; // 接続失敗
+    if (!connectDB()) { // connect to database
+        return false; // failure to connect database
     }
     
     CCLOG("sqlExec %s",sql);
@@ -61,7 +59,7 @@ bool VKBaseManager::sqlExec(const char *sql, int (*callback)(void *, int, char *
     int result = sqlite3_exec( pDB, sql ,callback, NULL, &errMsg );
     
     if(result != SQLITE_OK ){
-        CCLOG( "失敗　:%d ，原因:%s\n" , result, errMsg );
+        CCLOG( "Failure　:%d ，becouse :%s\n" , result, errMsg );
         closeDB();
         return false;
     }else{
@@ -138,9 +136,7 @@ VKBaseEntity* VKBaseManager::save(VKBaseEntity *entity)
     if (entity == NULL) {
         return NULL;
     }
-    // まずはinsertしてみる
-    
-    // keyに設定されているものをすべて
+    // Frist, try to save entity.
     CCDictElement *element = NULL;
     CCString *keys = CCString::create("");
     CCString *values = CCString::create("");
@@ -169,10 +165,15 @@ VKBaseEntity* VKBaseManager::save(VKBaseEntity *entity)
     
     bool result  = sqlExec(insertString->getCString());
 
-    // insertできなかったら、保存
+    // if entity cannot save, this entity should be saved or has properties more than old entity's definition.
     if (!result) {
-        CCString *updateString = CCString::createWithFormat("update %s set %s where id = %d",tableName, updates->getCString(), entity->getId());
-        result = sqlExec(updateString->getCString());
+        if (entity->getId()) { // if entity has id, this entity already exist, so this entity should be saved
+            CCString *updateString = CCString::createWithFormat("update %s set %s where id = %d",tableName, updates->getCString(), entity->getId());
+            result = sqlExec(updateString->getCString());
+        }else{
+            // TODO : 
+            // this failure maybe have more properties than old entity's definition, so alter table.
+        }
     }else{
         CCArray *array = select(entity);
         entity = (VKBaseEntity *)array->lastObject();
@@ -188,7 +189,6 @@ CCArray* VKBaseManager::select(VKBaseEntity *entity)
     if (entity == NULL) {
         return NULL;
     }
-    // keyに設定されているものをすべて
     CCDictElement *element = NULL;
     CCString *where = CCString::create("");
     CCDICT_FOREACH(entity, element){
