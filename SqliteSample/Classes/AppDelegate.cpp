@@ -50,15 +50,24 @@ bool AppDelegate::applicationDidFinishLaunching()
     sample-> setAddress(CCString::create("testAddress"));
     sample->setPhone(CCString::create("08011212312"));
  
+    // SampleManager
     SampleManager *sampleManager = SampleManager::create();
-//    sampleManager->deleteTable();
-//    sampleManager->createTable();
+    sampleManager->deleteTable(); // delete table
+    // reCreateTable
+    sampleManager = SampleManager::create();
+    
+    CCArray* allArray = sampleManager->selectAll();
+    CCObject *object = NULL;
+    CCARRAY_FOREACH(allArray, object) {
+        CCLOG("select all");
+        Sample *sample = (Sample *)object;
+        CCLog("%s",sample->toString());
+    }
     
     // insert entity
     sample = (Sample *)sampleManager->save(sample); 
     
     CCArray* resultArray =  sampleManager->select(sample);
-    CCObject *object = NULL;
     Sample *lastsample = NULL;
     CCARRAY_FOREACH(resultArray, object){
         Sample *sample = (Sample *)object;

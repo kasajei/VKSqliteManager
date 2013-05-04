@@ -24,6 +24,8 @@ public:
 public:
     void setId(int idNum);
     int getId();
+    
+    const char* toString();
 };
 
 #endif

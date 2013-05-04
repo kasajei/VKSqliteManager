@@ -23,6 +23,7 @@ public:
     bool connectDB();
     bool sqlExec(const char *sql, int (*callback)(void *, int, char **, char**) = NULL);
     cocos2d::CCArray *sqlPrepare(const char *sql);
+    bool runSQLFile(const char *fileName);
     void closeDB();
     CREATE_FUNC(VKBaseManager);
     
@@ -31,19 +32,24 @@ protected:
     const char* tableName = "";
     sqlite3 *pDB = NULL;
     
-public:
-    virtual bool checkTable();
+private:
+    bool checkTable();
+    
+public: // protocol
     virtual bool createTable();
     virtual bool addColumn();
-    virtual bool deleteTable();
-    virtual VKBaseEntity* save(VKBaseEntity *entity);
-    virtual cocos2d::CCArray* select(VKBaseEntity *entity);
-    virtual cocos2d::CCArray* selectWithWhere(const char *where);
+    virtual bool runAfterCreateTableOnce();
+    bool deleteTable();
+    
+public:
+    VKBaseEntity* save(VKBaseEntity *entity);
+    cocos2d::CCArray* select(VKBaseEntity *entity);
+    cocos2d::CCArray* selectAll();
+    cocos2d::CCArray* selectWithWhere(const char *where);
     
 protected:
-    virtual bool createTableWithTableSetting(const char *tableSetting);
-    virtual bool addColumnWithArray(cocos2d::CCArray *columnAry);
-
+    bool createTableWithTableSetting(const char *tableSetting);
+    bool addColumnWithArray(cocos2d::CCArray *columnAry);
 };
 
 

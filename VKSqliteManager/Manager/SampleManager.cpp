@@ -29,19 +29,24 @@ SampleManager::~SampleManager()
 {
 }
 
+// 
 bool SampleManager::createTable(){
-    CCString *sqlString = CCString::createWithFormat("%s nvarchar(32)", nameKey);
+    CCString *sqlString = CCString::createWithFormat("%s nvarchar(32), %s nvarchar(32)", nameKey, addressKey);
     return createTableWithTableSetting(sqlString -> getCString());
+}
+
+
+// this function will be called after createTable, so you can initialize database.
+bool SampleManager::runAfterCreateTableOnce(){
+    return runSQLFile("default.sql");
 }
 
 bool SampleManager::addColumn(){
     CCArray *array = CCArray::create();
-    
-    CCString *column1 = CCString::createWithFormat("%s nvarchar(32)", addressKey);
-    array->addObject(column1);
-    CCString *column2 = CCString::createWithFormat("%s nvarchar(32)", phoneKey);
-    array->addObject(column2);
 
+    CCString *phone = CCString::createWithFormat("%s nvarchar(32)", phoneKey);
+    array->addObject(phone);
+    
     return addColumnWithArray(array);
 }
 

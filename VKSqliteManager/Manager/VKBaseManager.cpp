@@ -15,7 +15,10 @@ using namespace std;
 
 bool VKBaseManager::init(){
     if (!checkTable()) {
-        createTable();
+        if(createTable()){
+            runAfterCreateTableOnce();
+        }else{
+        }
     }
     return true;
 }
@@ -33,6 +36,9 @@ VKBaseManager::~VKBaseManager()
 bool VKBaseManager::connectDB(){
     // setting to database's path
     std::string dbPath = CCFileUtils::sharedFileUtils()->getWriteablePath();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    dbPath.append("databases/");
+#endif
     dbPath.append(dbFileName);
     
     //  get database's connection
@@ -109,9 +115,14 @@ CCArray* VKBaseManager::sqlPrepare(const char *sql){
 bool VKBaseManager::checkTable(){
     CCString *string = CCString::createWithFormat("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='%s'",tableName);
     CCArray *array = sqlPrepare(string -> getCString());
-    CCDictionary *dic =  (CCDictionary *)array->objectAtIndex(0);
-    CCString *countString = (CCString*)dic->objectForKey("count(*)");
-    return countString->intValue();
+    if (array->count()) {
+        CCDictionary *dic =  (CCDictionary *)array->objectAtIndex(0);
+        CCString *countString = (CCString*)dic->objectForKey("count(*)");
+        return countString->intValue();
+    }else{
+        return false;
+    }
+    
 }
 
 
@@ -123,7 +134,9 @@ bool VKBaseManager::createTable(){
 
 bool VKBaseManager::createTableWithTableSetting(const char *tableSetting){
     CCString *sqlString = CCString::createWithFormat("create table %s ( %s integer primary key autoincrement, %s )", tableName,idKey, tableSetting);
-    return sqlExec(sqlString -> getCString());
+    if(sqlExec(sqlString -> getCString())){
+        return addColumn();
+    }
 }
 
 bool VKBaseManager::addColumn(){
@@ -145,7 +158,31 @@ bool VKBaseManager::deleteTable(){
     return sqlExec(string->getCString());
 }
 
+bool VKBaseManager::runAfterCreateTableOnce(){
+    return true;
+}
 
+bool VKBaseManager::runSQLFile(const char *fileName){
+    // setting to database's path
+    std::string copyDbPath = CCFileUtils::sharedFileUtils()->fullPathFromRelativePath(fileName);
+    unsigned long fileSize = 0;
+    unsigned char *fileContents = CCFileUtils::sharedFileUtils()->getFileData(copyDbPath.c_str(), "r", &fileSize);
+    istringstream fileStringStream( (char *)fileContents );
+    
+    string thisLine;
+    while (getline(fileStringStream, thisLine)) {
+        if(thisLine.find(";") != -1){ // if thisLine has not ';' , it be skipped.
+            sqlExec(thisLine.c_str());
+        }
+    }
+    
+    if (fileContents) {
+        delete [] fileContents;
+        fileContents = NULL;
+    }
+    
+    return true;
+}
 
 
 VKBaseEntity* VKBaseManager::save(VKBaseEntity *entity)
@@ -221,6 +258,11 @@ CCArray* VKBaseManager::select(VKBaseEntity *entity)
     }
     return selectWithWhere(where->getCString());
     
+}
+
+CCArray* VKBaseManager::selectAll(){
+    CCString *sqlString = CCString::createWithFormat("select * from %s", tableName);
+    return sqlPrepare(sqlString -> getCString());
 }
 
 

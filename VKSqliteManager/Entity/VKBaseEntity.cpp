@@ -40,3 +40,13 @@ int VKBaseEntity::getId(){
     }
     
 }
+
+const char* VKBaseEntity::toString(){
+    CCDictElement *element = NULL;
+    CCString *string = CCString::create("");
+    CCDICT_FOREACH(this, element){
+        CCString *value = (CCString *)element -> getObject();
+        string = CCString::createWithFormat("%s %s = %s :",string->getCString(), element->getStrKey(), value->getCString());
+    }
+    return string->getCString();
+}
