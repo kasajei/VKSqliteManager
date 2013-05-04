@@ -56,6 +56,8 @@ bool AppDelegate::applicationDidFinishLaunching()
     // reCreateTable
     sampleManager = SampleManager::create();
     
+    sampleManager->save(sample);
+    
     CCArray* allArray = sampleManager->selectAll();
     CCObject *object = NULL;
     CCARRAY_FOREACH(allArray, object) {
@@ -64,34 +66,13 @@ bool AppDelegate::applicationDidFinishLaunching()
         CCLog("%s",sample->toString());
     }
     
-    // insert entity
-    sample = (Sample *)sampleManager->save(sample); 
-    
-    CCArray* resultArray =  sampleManager->select(sample);
-    Sample *lastsample = NULL;
-    CCARRAY_FOREACH(resultArray, object){
+    sampleManager->deleteWithEntity(sample);
+    allArray = sampleManager->selectAll();
+    object = NULL;
+    CCARRAY_FOREACH(allArray, object) {
         Sample *sample = (Sample *)object;
-        CCLog("%d,%s",sample->getId(),((CCString *)sample->getName())->getCString());
-        lastsample = (Sample *)object;
+        CCLog("%s",sample->toString());
     }
-    
-    // search entity
-    CCArray* resultArray2 =  sampleManager->select(lastsample);
-    CCARRAY_FOREACH(resultArray2, object){
-        Sample *sample = (Sample *)object;
-        CCLog("%d,%s",sample->getId(),((CCString *)sample->getName())->getCString());
-    }
-    
-    // change entity
-    sample->setName(CCString::createWithFormat("test5"));
-    sampleManager->save(sample);
-    
-    CCArray* resultArray3 =  sampleManager->getSampleGreaterThanId(1);
-    CCARRAY_FOREACH(resultArray3, object){
-        Sample *sample = (Sample *)object;
-        CCLog("%d,%s",sample->getId(),((CCString *)sample->getName())->getCString());
-    }
-    
 
     return true;
 }

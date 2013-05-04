@@ -225,13 +225,11 @@ VKBaseEntity* VKBaseManager::save(VKBaseEntity *entity)
             CCString *updateString = CCString::createWithFormat("update %s set %s where id = %d",tableName, updates->getCString(), entity->getId());
             result = sqlExec(updateString->getCString());
         }else{
-            // TODO : 
-            // this failure maybe have more properties than old entity's definition, so alter table.
             addColumn(); // change table
             save(entity); // Re-save entity
         }
     }else{
-        CCArray *array = select(entity);
+        CCArray *array = selectWithEntity(entity);
         entity = (VKBaseEntity *)array->lastObject();
     }
     return entity;
@@ -239,9 +237,7 @@ VKBaseEntity* VKBaseManager::save(VKBaseEntity *entity)
 }
 
 
-
-CCArray* VKBaseManager::select(VKBaseEntity *entity)
-{
+CCString* VKBaseManager::createWhereFromEntity(VKBaseEntity *entity){
     if (entity == NULL) {
         return NULL;
     }
@@ -256,8 +252,13 @@ CCArray* VKBaseManager::select(VKBaseEntity *entity)
             where = CCString::createWithFormat(" %s AND %s = '%s' ",where->getCString(), element->getStrKey(), value->getCString());
         }
     }
-    return selectWithWhere(where->getCString());
-    
+    return where;
+}
+
+
+CCArray* VKBaseManager::selectWithEntity(VKBaseEntity *entity)
+{
+    return selectWithWhere(createWhereFromEntity(entity)->getCString());
 }
 
 CCArray* VKBaseManager::selectAll(){
@@ -273,6 +274,20 @@ CCArray* VKBaseManager::selectWithWhere(const char *where)
     
 }
 
+
+bool VKBaseManager::deleteWithEntity(VKBaseEntity *entity){
+    return deleteWithWhere(createWhereFromEntity(entity)->getCString());
+}
+
+bool VKBaseManager::deleteAll(){
+    CCString *sqlString = CCString::createWithFormat("delete from %s", tableName);
+    return sqlExec(sqlString->getCString());
+}
+
+bool VKBaseManager::deleteWithWhere(const char *where){
+    CCString *sqlString = CCString::createWithFormat("delete from %s where %s", tableName, where);
+    return sqlExec(sqlString->getCString());
+}
 
 
 

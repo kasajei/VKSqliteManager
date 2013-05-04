@@ -42,10 +42,14 @@ public: // protocol
     bool deleteTable();
     
 public:
+    cocos2d::CCString* createWhereFromEntity(VKBaseEntity *entity);
     VKBaseEntity* save(VKBaseEntity *entity);
-    cocos2d::CCArray* select(VKBaseEntity *entity);
+    cocos2d::CCArray* selectWithEntity(VKBaseEntity *entity);
     cocos2d::CCArray* selectAll();
     cocos2d::CCArray* selectWithWhere(const char *where);
+    bool deleteWithEntity(VKBaseEntity *entity);
+    bool deleteAll();
+    bool deleteWithWhere(const char *where);
     
 protected:
     bool createTableWithTableSetting(const char *tableSetting);
